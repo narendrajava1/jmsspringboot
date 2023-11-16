@@ -61,3 +61,13 @@ Artemis UI
 ![img_5.png](img_5.png)
 That's It.
 Now that the broker is running, you can optionally run some of the included examples to verify the broker is running properly.
+
+
+### For Docker :::
+1) First we have to do ```mvn clean isntall```
+2) after we ahve to build the docker image with the help of this command ```docker build -t dockerhandson/spring-boot-jms:latest .```
+3) after just run the docker compose using this command ``` docker-compose down ```
+
+that's it your able to run the springboot and active mq in docker 
+
+:) 

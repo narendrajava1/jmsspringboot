@@ -36,7 +36,7 @@ public class PublishController {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectMessage message = session.createObjectMessage(systemMessage);
         message.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, 1000);
-        message.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_PERIOD, 1000);
+        message.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_PERIOD, 10000);
         message.setIntProperty(ScheduledMessage.AMQ_SCHEDULED_REPEAT, 9);
         producer.send(message);
         return new ResponseEntity<>("Sent.", HttpStatus.OK);
