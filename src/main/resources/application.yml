@@ -1,0 +1,9 @@
+server:
+  port: 9899
+spring:
+  activemq:
+    broker-url: ${spring.activemq.broker-url}
+    packages:
+      trust-all: true
+    password: admin
+    user: admin

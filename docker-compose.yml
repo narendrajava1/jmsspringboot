@@ -1,46 +1,58 @@
 version: '3.1'
 services:
-  apacheactivemq_classic:
-    container_name: activeMQContainer
-    image: webcenter/activemq
+  activemq:
+    image: rmohr/activemq:5.15.9-alpine
     restart: always
+    ports:
+      - 61616:61616
+      - 8161:8161
+      - 5672:5672
+    container_name: activemq
+
+  #  apacheactivemq_classic:
+#    container_name: activeMQContainer
+#    image: webcenter/activemq
+#    restart: always
     networks:
       - jmsnetwork
-    ports:
-      # ui
-      - "8161:8161"
-      # amqp
-      - "5672:5672"
-      # stomp
-      - "61613:61613"
-      # ws
-      - "61614:61614"
-      # mqtt
-      - "1883:1883"
-      # jms
-      - "61616:61616"
+#    ports:
+#      # ui
+#      - "8161:8161"
+#      # amqp
+#      - "5672:5672"
+#      # stomp
+#      - "61613:61613"
+#      # ws
+#      - "61614:61614"
+#      # mqtt
+#      - "1883:1883"
+#      # jms
+#      - "61616:61616"
 #    volumes:
-#      - "activemq-data:/etc/activemq/conf"
-#      - "activemq-data:/var/lib/activemq/data"
-#      - "activemq-data:/opt/activemq/conf"
-#      - "activemq-data:/opt/activemq/data"
+#      - activemq.xml:/opt/activemq/conf
+##      - "activemq-data:/etc/activemq/conf"
+##      - "activemq-data:/var/lib/activemq/data"
+##      - "activemq-data:/opt/activemq/conf"
+##      - "activemq-data:/opt/activemq/data"
     environment:
-      - ACTIVEMQ_ADMIN_LOGIN=admin
-      - ACTIVEMQ_ADMIN_PASSWORD=admin
+      - ACTIVEMQ_HOST=activemq
+#      - ACTIVEMQ_ADMIN_LOGIN=admin
+#      - ACTIVEMQ_ADMIN_PASSWORD=admin
       - ACTIVEMQ_ENABLED_SCHEDULER=true
-      - ACTIVEMQ_CONFIG_QUEUES_queue1=bridgingcode-queue
+#      - ACTIVEMQ_CONFIG_QUEUES_queue1=bridgingcode-queue
   springboot:
     image: dockerhandson/spring-boot-jms:latest
     restart: always # This will be ignored if we deploy in docker swarm
     environment:
-      - MONGO_DB_HOSTNAME=mongo
+      - spring.activemq.broker-url=tcp://activemq:61616
+      - ACTIVE_MQ_HOSTNAME=activeMQContainer
       - MONGO_DB_USERNAME=devdb
       - MONGO_DB_PASSWORD=devdb123
     ports:
       - "9899:9899"
     working_dir: /opt/app
     depends_on:
-      - apacheactivemq_classic
+      - activemq
     networks:
       - jmsnetwork
 
